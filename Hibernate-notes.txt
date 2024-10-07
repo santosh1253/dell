@@ -1,0 +1,386 @@
+Hibernate Notes:
+`````````````````
+
+Langaugaes are raw materials-->everything we have to develop
+Ex: C,Java
+Technologies-->Something existed but we have to develop
+Ex: servlets,jdbc
+Framework-->Fully furnished product -just make use
+Ex: Spring,Hibernate etcc..
+
+
+Framework:
+`````````
+-->installable s/w built on top of one or more technologies.
+-->Abstraction layer which simplifies the development process
+--> Ex: struts,spring,hibernate,JSF etc..
+
+Different types of Java Frameworks:
+```````````````````````````````````
+1)Web application framework/web Frameworks
+-->Designed to devlop mvc architecture based web applications
+-->Designed based on servlet,jsp technologies
+Eg:
+   struts - from Apache
+   JSF - from sun MS
+   Spring MVC - from interface21
+   webwork  - from open symphony
+   ADF - oracle 
+   
+2) ORM Frameworks
+--> Designed to develop obj's based on DB s/w independent logic
+--> Simplifies persistance logic
+
+ex:
+    hibernate - from softtree
+	iBatis - from Apache
+	OJB    - from apache
+	Toplink - from Oracle
+	Open Jpa - Sun MS etcc..
+
+3) Application Frameworks
+
+--> provide abstraction layer on multiple java,jee technologies
+ex:
+    spring -- from interface21
+	Hibernate,spring are non-invasive frameworks
+
+
+
+
+
+
+
+
+
+
+
+
+I/O streams:
+````````````
+Serialization:
+``````````````
+The process of converting object data into bits and bytes can be sent into a file 
+or over a network called serialization(writing process)
+
+De-Serialization:
+````````````````
+Read Data from file and convert into object(Reading process)
+
+
+No security, No sql support so files are not used persistance in java while building large scale app's
+Files are preffered for small scale applications like desktop and mobile app's
+
+Overcome with:
+``````````````
+          jdbc (or) O-R Mapping
+Java App ---------------------->  DB(s/w) -RDBMS(oracle,mysql etc..)
+
+Limitations of JDBC:
+````````````````````
+1)Database s/w dependent Queries
+2)Change in DB results in change in Java code(Persistance logic)
+3)JDBC code is not portable
+4)Need to convert object data into simple values to use them in persistance logic
+(cannot do persistance op's on object directly)
+5)Exception Handling is Mandatory (SQL Exception)
+6)Less support of versioning and Time stamping(how many times the record is modified and at what point of time it is modified)
+  it is possible with ORM
+7)Doest not support object level Relationships
+8) Boiler plate code
+
+Object Relational Mapping :
+```````````````````````````
+-->Mapping Java classes to DB as tables
+-->Objects are mapped as records of a table
+-->Hibernate is used to perform OR mapping
+
+Why Hibernate?
+``````````````
+
+It is a Open source ,light weight , non-invasive java ORM framework
+to develop objects that are s/w independent persistance logic in all java,JEE,java framework apps
+
+-->Hibernate is a just an abstraction layer on top of jdbc 
+
+Lightweight:
+````````````
+--> small size in installation
+--> No need of heavy server for execution
+--> POJO model programming
+--> can be used alone can be used with java technologies/frameworks
+
+non-invasive:
+`````````````
+
+Classes /Interfaces which are being developed need not extend hibernate framework classes/Interfaces
+
+(Loosely coupled nature)
+
+--> can use objects directly in queries
+
+
+Advantages of O-R Mapping:
+`````````````````````````
+1) switching between the databases
+2) DB s/w independent
+3) Persistance op's can be done on object directly
+4) Boiler plate code is minimized when compared to JDBC
+5) Exception handling (Unchecked exceptions mostly)
+6) Middleware service--Like Transaction Management,Logging etc..
+
+
+
+When Jdbc?
+``````````
+
+--> Processing large amount of data comes by batch by batch
+ex: Census application
+
+When Hibernate?
+```````````````
+Limited amount of data kind of applications with added advantages(features).
+
+
+POJO Class:
+```````````
+
+--> Simple ordinary class without any specialities
+--> Java Class which do not extend/implement from technologies/frameworks but can be annotated with framework annotations
+
+Note:
+`````
+It can implement serializable bcoz serializable is part of java language not framework
+
+
+
+
+
+
+Hibernate Architecture:
+```````````````````````
+
+Uses more components(technologies) to connect with databases.
+
+Java App(contains persistance logic) -------> Hibernate Framework  ------> Components(JNDI,JTA,JDBC) ---> JDBC Driver -----> Database
+
+
+JNDI - java naming directory interface
+JTA-   java transaction API
+
+
+Persistance logic in Java App:
+``````````````````````````````
+
+--> HB configuration file - 1 per database
+  contains information regarding which db s/w to be connected & driver information etcc..
+--> HB Mapping file  - 1 per database table
+  configures domain/ entity classes and their objects to be mapped 
+--> Domain/Entity class (POJO class) - 1 per database table
+ 
+3 Important Objects of Hibernate Persistance Logic Development:
+````````````````````````````````````````````````````````````````
+1)Configuration Object:
+  ````````````````````
+--> Activating/Bootstraping the Hibernate framework
+
+eg:  Configuration c=new Configuration();
+     // Read both xml and mapping files
+	 cfg=cfg.configure("path of the xml file");
+-->In-memory data (meta data) will be added inside jvm about the xml ana mapping files
+
+2)SessionFactory Object:
+`````````````````````````
+-->Object a class that implements org.hibernate.sessionFactory(I)
+-->Factory to create Session objects
+-->It represents jdbc Connection Pool
+-->Designed around Factory Pattern
+-->Immutble object like strings
+-->Thread safe object
+--> Created based on configuration class object
+--> Heavy weight object- handles second level caching in hibernate
+
+SessionFactory factory=cfg.buildSessionFactory();
+
+buildSessionFactory() method gathers the in-memory meta information about
+the xml/mapping files and returns into the factory object
+
+3)Session Object:
+``````````````````
+
+-->No way related to session object in servlets
+-->Created based on SessionFactory Object
+-->Opens connection/Session with DB s/w through hibernate framework
+-->It is base program/app to give Domain class obj's based persistance
+instructions to Hibernate
+-->Lightweight and Not Threadsafe
+--> Obj of A class that implements org.hibernate.Session(I)
+
+Eg: Session session=factory.openSession();
+
+session.save(obj);
+session.delete(obj);
+session.update(obj);
+session.load/get(Domain,id);
+...etc
+
+
+
+DAO(DataAccessObject):
+``````````````````````
+-->Making persistance logic reusable in other components in application
+-->To seperate persistance logic from other logics
+--> Helper class for Service Class
+
+
+Parts of DAO:
+``````````````
+a) query part
+b) code part
+
+--> Best practice: create one DAO per table in application
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
